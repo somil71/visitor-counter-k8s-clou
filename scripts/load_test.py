@@ -9,7 +9,7 @@ import time
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-TARGET_URL = "http://localhost:30080/load?duration=0.4"
+TARGET_URL = "http://localhost:8080/load?duration=0.4"
 
 def make_request(req_id):
     try:
