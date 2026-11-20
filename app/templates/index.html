@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Computing - Visitor Counter App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-blue: #38bdf8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--accent-blue);
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #ffffff, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .counter-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .counter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--primary), var(--accent-green));
+        }
+
+        .counter-label {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .counter-number {
+            font-size: 5rem;
+            font-weight: 700;
+            color: #38bdf8;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .btn-refresh {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .info-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-healthy {
+            background-color: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        .status-error {
+            background-color: var(--accent-red);
+            box-shadow: 0 0 10px var(--accent-red);
+        }
+
+        .hpa-actions {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn-hpa {
+            background: #d97706;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-hpa:hover {
+            background: #b45309;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="badge">Cloud Computing Project</span>
+            <h1>Distributed Visitor Counter</h1>
+            <p class="subtitle">Flask + Redis Microservice on Docker & Kubernetes</p>
+        </div>
+
+        <div class="counter-card">
+            <div class="counter-label">Total Visits Tracked</div>
+            <div class="counter-number">{{ visits }}</div>
+            <button class="btn-refresh" onclick="window.location.reload();">
+                &#x21bb; Refresh & Increment Counter
+            </button>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-title">Pod / Container Hostname</span>
+                <span class="info-value" style="color: #a78bfa;">{{ hostname }}</span>
+            </div>
+
+            <div class="info-card">
+                <span class="info-title">Redis Status</span>
+                <span class="info-value">
+                    {% if 'Connected' in redis_status %}
+                        <span class="status-dot status-healthy"></span>Connected ({{ redis_host }}:{{ redis_port }})
+                    {% else %}
+                        <span class="status-dot status-error"></span>{{ redis_status }}
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-card">
+                <span class="info-title">Deployment Environment</span>
+                <span class="info-value" style="color: #38bdf8;">{{ environment }}</span>
+            </div>
+
+            <div class="info-card">
+                <span class="info-title">Cluster Zone / Node</span>
+                <span class="info-value">{{ cloud_region }}</span>
+            </div>
+        </div>
+
+        <div class="hpa-actions">
+            <div>
+                <strong style="color: #f59e0b;">HPA Autoscaler Testing:</strong>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">
+                    Triggers simulated CPU computations on the active pod.
+                </p>
+            </div>
+            <button class="btn-hpa" onclick="triggerLoad()">Generate CPU Load</button>
+        </div>
+
+        <div class="footer">
+            Docker &bull; Kubernetes &bull; Horizontal Pod Autoscaler &bull; Hybrid Cloud Failover &bull; Cost Optimization
+        </div>
+    </div>
+
+    <script>
+        async function triggerLoad() {
+            const btn = document.querySelector('.btn-hpa');
+            btn.innerText = "Simulating Load...";
+            btn.disabled = true;
+            try {
+                const res = await fetch('/load?duration=1.0');
+                const data = await res.json();
+                alert("Simulated CPU load completed on pod: " + data.pod_hostname + " (" + data.duration_seconds + "s)");
+            } catch (e) {
+                alert("Load error: " + e);
+            } finally {
+                btn.innerText = "Generate CPU Load";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
