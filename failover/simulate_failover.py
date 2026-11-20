@@ -10,7 +10,7 @@ import urllib.request
 import time
 import sys
 
-PRIMARY_URL = "http://localhost:30080"
+PRIMARY_URL = "http://localhost:8080"
 STANDBY_URL = "http://localhost:5001"
 
 def check_endpoint(url, timeout=1.5):
