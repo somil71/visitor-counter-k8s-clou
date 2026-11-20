@@ -24,35 +24,77 @@ The objective of this project is to implement, test, and evaluate a production-g
 
 ## 2. System Architecture
 
-```
-                                [ Incoming Client Traffic ]
-                                             |
-                                             v
-                             +-------------------------------+
-                             |  Reverse Proxy / Ingress      |
-                             |  (Health Checking & Routing)  |
-                             +---------------+---------------+
-                                             |
-                   +-------------------------+-------------------------+
-                   | (Active Primary Path)                             | (Standby DR Path)
-                   v                                                   v
-     +-----------------------------+                     +-----------------------------+
-     |   Kubernetes Cluster        |                     |   Public Cloud Region       |
-     |   (On-Premises / Minikube)  |                     |   (Disaster Recovery)       |
-     |                             |                     |                             |
-     |   +---------------------+   |                     |   +---------------------+   |
-     |   | Ingress / NodePort  |   |                     |   | Standby Web Service |   |
-     |   +----------+----------+   |                     |   +---------------------+   |
-     |              |              |                     +-----------------------------+
-     |   +----------v----------+   |
-     |   | Flask Service (HPA) |   |
-     |   | [Pod 1] ... [Pod 6] |   |
-     |   +----------+----------+   |
-     |              |              |
-     |   +----------v----------+   |
-     |   | Redis ClusterIP Svc |   |
-     |   +---------------------+   |
-     +-----------------------------+
+![Architecture Diagram](architecture_diagram.png)
+
+### 2.1 Interactive Architecture Flowchart (Mermaid)
+
+```mermaid
+flowchart TD
+    subgraph CLIENT_TIER["Client & Testing Tier"]
+        Client["Web Browser / Client Traffic"]
+        LoadGen["Load Generator (load_test.py - 16 Threads)"]
+    end
+
+    subgraph EDGE_ROUTER["Edge Layer / Load Balancer"]
+        Proxy["Reverse Proxy / Traffic Director<br/>(Health Probing & Dynamic Failover)"]
+    end
+
+    subgraph PRIMARY_K8S["Primary Region: Kubernetes Cluster (Minikube)"]
+        K8sSvc["Flask Service (NodePort :30080 / :8080)"]
+        
+        subgraph HPA_SUBSYSTEM["Autoscaling & Telemetry"]
+            HPA["Horizontal Pod Autoscaler (HPA)<br/>Target: 50% CPU | Min: 2 | Max: 6"]
+            Metrics["Metrics-Server<br/>(metrics.k8s.io)"]
+        end
+
+        subgraph POD_FLEET["Flask Deployment (visitor-app:latest)"]
+            Pod1["Pod 1 (Baseline Active)"]
+            Pod2["Pod 2 (Baseline Active)"]
+            Pod3["Pod 3..6 (Scaled on Surge)"]
+        end
+
+        Config["ConfigMap: app-config<br/>REDIS_HOST=redis-service"]
+        RedisSvc["Redis Service (ClusterIP :6379)"]
+        RedisPod[("Redis Key-Value Pod<br/>(Atomic INCR State)")]
+    end
+
+    subgraph SECONDARY_CLOUD["Secondary Region: Cloud Disaster Recovery (AWS DR)"]
+        CloudStandby["Standby DR Web Server (:5001)<br/>(Python/Flask Health Monitor)"]
+        CloudState[("DR Fallback State<br/>(Zero Downtime Backup)")]
+    end
+
+    %% Routing Connections
+    Client --> Proxy
+    LoadGen --> Proxy
+
+    Proxy -- "Active Primary Route (Normal)" --> K8sSvc
+    Proxy -. "Failover Route (Primary Outage)" .-> CloudStandby
+
+    K8sSvc --> Pod1
+    K8sSvc --> Pod2
+    K8sSvc --> Pod3
+
+    Config -. Injected Env .-> POD_FLEET
+    Metrics -- Scrapes CPU --> POD_FLEET
+    Metrics --> HPA
+    HPA -- "Auto-Scales (2 to 6 Replicas)" --> POD_FLEET
+
+    Pod1 --> RedisSvc
+    Pod2 --> RedisSvc
+    Pod3 --> RedisSvc
+
+    RedisSvc --> RedisPod
+    CloudStandby --> CloudState
+
+    %% Styling
+    style CLIENT_TIER fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc
+    style EDGE_ROUTER fill:#1e293b,stroke:#fbbf24,stroke-width:2px,color:#f8fafc
+    style PRIMARY_K8S fill:#0f172a,stroke:#38bdf8,stroke-width:3px,color:#f8fafc
+    style SECONDARY_CLOUD fill:#2a1515,stroke:#ef4444,stroke-width:2px,stroke-dasharray: 5 5,color:#f8fafc
+    style HPA_SUBSYSTEM fill:#334155,stroke:#fbbf24,stroke-width:1.5px,color:#f8fafc
+    style POD_FLEET fill:#1e293b,stroke:#34d399,stroke-width:2px,color:#f8fafc
+    style RedisPod fill:#1e293b,stroke:#e2e8f0,stroke-width:2px,color:#f8fafc
+    style CloudStandby fill:#1e293b,stroke:#ef4444,stroke-width:2px,color:#f8fafc
 ```
 
 ---
