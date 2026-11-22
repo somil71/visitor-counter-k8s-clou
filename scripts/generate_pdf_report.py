@@ -1,8 +1,9 @@
 """
-Generate Professional Submission-Ready PDF Report
+Generate Comprehensive Submission-Ready PDF Report
 for Cloud Computing Small Project:
 Deploy a Visitor Counter Web App (Flask + Redis) on Docker and Kubernetes
-Tightly-typeset, publication-grade academic report layout.
+Fully integrated with Architecture Diagram, Screenshots for all Tasks (A-E),
+and Before/After Cost Analysis Tables.
 """
 
 import os
@@ -11,7 +12,7 @@ from reportlab.lib import colors
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, KeepTogether, HRFlowable
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, KeepTogether, HRFlowable, PageBreak
 )
 from reportlab.pdfgen import canvas
 
@@ -35,24 +36,22 @@ class NumberedCanvas(canvas.Canvas):
 
     def draw_page_decorations(self, page_count):
         self.saveState()
-        # Suppress running header on cover/page 1
         if self._pageNumber > 1:
             self.setFont("Helvetica-Bold", 8)
             self.setFillColor(colors.HexColor("#475569"))
-            self.drawString(54, 11 * inch - 36, "Cloud Computing Project Report | Visitor Counter (Flask + Redis) on K8s")
+            self.drawString(50, 11 * inch - 36, "Cloud Computing Project Report | Visitor Counter (Flask + Redis) on K8s")
             self.setStrokeColor(colors.HexColor("#cbd5e1"))
             self.setLineWidth(0.5)
-            self.line(54, 11 * inch - 40, 8.5 * inch - 54, 11 * inch - 40)
+            self.line(50, 11 * inch - 40, 8.5 * inch - 50, 11 * inch - 40)
 
-        # Footer on all pages
         self.setFont("Helvetica", 8)
         self.setFillColor(colors.HexColor("#64748b"))
         self.setStrokeColor(colors.HexColor("#cbd5e1"))
         self.setLineWidth(0.5)
-        self.line(54, 42, 8.5 * inch - 54, 42)
-        self.drawString(54, 30, "Academic Project Submission | CampX & Google Drive | Target Date: 24 Nov 2026")
+        self.line(50, 42, 8.5 * inch - 50, 42)
+        self.drawString(50, 30, "Academic Project Submission | CampX & Google Drive | Target Date: 24 Nov 2026")
         page_text = f"Page {self._pageNumber} of {page_count}"
-        self.drawRightString(8.5 * inch - 54, 30, page_text)
+        self.drawRightString(8.5 * inch - 50, 30, page_text)
         self.restoreState()
 
 
@@ -60,18 +59,17 @@ def build_pdf_report(pdf_filename):
     doc = SimpleDocTemplate(
         pdf_filename,
         pagesize=letter,
-        leftMargin=50,
-        rightMargin=50,
-        topMargin=48,
-        bottomMargin=48
+        leftMargin=48,
+        rightMargin=48,
+        topMargin=46,
+        bottomMargin=46
     )
 
     styles = getSampleStyleSheet()
     
-    # Palette
+    # Color Palette
     COLOR_PRIMARY = colors.HexColor("#0f172a")     # Deep Slate
-    COLOR_SECONDARY = colors.HexColor("#1d4ed8")   # Rich Blue
-    COLOR_ACCENT = colors.HexColor("#047857")      # Forest Green
+    COLOR_SECONDARY = colors.HexColor("#1d4ed8")   # Royal Blue
     COLOR_CARD = colors.HexColor("#f8fafc")        # Slate 50
     COLOR_BORDER = colors.HexColor("#cbd5e1")      # Slate 300
 
@@ -79,8 +77,8 @@ def build_pdf_report(pdf_filename):
         'CoverTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=20,
-        leading=24,
+        fontSize=18,
+        leading=22,
         textColor=COLOR_PRIMARY
     )
 
@@ -88,8 +86,8 @@ def build_pdf_report(pdf_filename):
         'CoverSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=10.5,
-        leading=14,
+        fontSize=9.5,
+        leading=13,
         textColor=colors.HexColor("#475569")
     )
 
@@ -97,11 +95,11 @@ def build_pdf_report(pdf_filename):
         'Header1',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=13,
-        leading=17,
+        fontSize=12,
+        leading=15,
         textColor=COLOR_SECONDARY,
-        spaceBefore=10,
-        spaceAfter=4,
+        spaceBefore=8,
+        spaceAfter=3,
         keepWithNext=True
     )
 
@@ -109,11 +107,11 @@ def build_pdf_report(pdf_filename):
         'Header2',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=10.5,
-        leading=14,
+        fontSize=9.5,
+        leading=13,
         textColor=COLOR_PRIMARY,
-        spaceBefore=7,
-        spaceAfter=3,
+        spaceBefore=5,
+        spaceAfter=2,
         keepWithNext=True
     )
 
@@ -121,10 +119,10 @@ def build_pdf_report(pdf_filename):
         'BodyDark',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=9,
-        leading=12.5,
+        fontSize=8.5,
+        leading=11.5,
         textColor=colors.HexColor("#334155"),
-        spaceAfter=4
+        spaceAfter=3
     )
 
     bullet_style = ParagraphStyle(
@@ -135,23 +133,32 @@ def build_pdf_report(pdf_filename):
         spaceAfter=2
     )
 
+    caption_style = ParagraphStyle(
+        'Caption',
+        fontName='Helvetica-Oblique',
+        fontSize=7.5,
+        leading=10,
+        textColor=colors.HexColor("#64748b"),
+        alignment=1
+    )
+
     story = []
 
     # =========================================================================
     # HEADER / TITLE BLOCK
     # =========================================================================
-    story.append(Paragraph("CLOUD COMPUTING — PRACTICAL PROJECT REPORT", ParagraphStyle(
-        'TopBadge', fontName='Helvetica-Bold', fontSize=8.5, leading=10, textColor=COLOR_SECONDARY
+    story.append(Paragraph("CLOUD COMPUTING — PRACTICAL LAB & PROJECT REPORT", ParagraphStyle(
+        'TopBadge', fontName='Helvetica-Bold', fontSize=8, leading=10, textColor=COLOR_SECONDARY
     )))
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
     story.append(Paragraph("Deploy a Visitor Counter Web App (Flask + Redis) on Docker and Kubernetes", title_style))
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
     story.append(Paragraph(
-        "Demonstration of 5 Cloud Native Capabilities: Microservice Containerization, Kubernetes Orchestration, "
+        "Complete Implementation of 5 Cloud Tasks: Microservice Containerization, Kubernetes Orchestration, "
         "Horizontal Pod Autoscaling (HPA), Hybrid Cloud Failover, and Empirical Cost Engineering.",
         subtitle_style
     ))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # Metadata Box
     meta_data = [
@@ -165,28 +172,28 @@ def build_pdf_report(pdf_filename):
         ],
         [
             Paragraph("<b>Platforms:</b> CampX & Google Drive", body_style),
-            Paragraph("<b>GitHub:</b> <font color='#1d4ed8'>https://github.com/somil71/visitor-counter-k8s-clou</font>", body_style)
+            Paragraph("<b>GitHub:</b> <font color='#1d4ed8'><u>https://github.com/somil71/visitor-counter-k8s-clou</u></font>", body_style)
         ]
     ]
-    t_meta = Table(meta_data, colWidths=[256, 256])
+    t_meta = Table(meta_data, colWidths=[258, 258])
     t_meta.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, -1), COLOR_CARD),
         ('BOX', (0, 0), (-1, -1), 0.75, COLOR_BORDER),
         ('INNERGRID', (0, 0), (-1, -1), 0.5, COLOR_BORDER),
-        ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
         ('LEFTPADDING', (0, 0), (-1, -1), 8),
         ('RIGHTPADDING', (0, 0), (-1, -1), 8),
     ]))
     story.append(t_meta)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # =========================================================================
     # 1. EXECUTIVE SUMMARY & OBJECTIVES
     # =========================================================================
     story.append(Paragraph("1. Executive Summary & Core Objectives", h1_style))
     story.append(Paragraph(
-        "This project implements a highly available, decoupled <b>Visitor Counter microservice</b> deployed on Docker "
+        "This project implements a decoupled, highly available <b>Visitor Counter microservice</b> deployed on Docker "
         "and Kubernetes. All five core assignment tasks specified in the practical instructions have been fully realized "
         "and validated on a live Minikube cluster running locally on Windows 11:",
         body_style
@@ -200,18 +207,18 @@ def build_pdf_report(pdf_filename):
         [Paragraph("<b>Task (d)</b>", body_style), Paragraph("Hybrid Cloud Failover", body_style), Paragraph("Active-passive DR (Primary K8s :8080 vs Standby Public Cloud :5001)", body_style), Paragraph("<font color='#047857'><b>100% Verified</b></font>", body_style)],
         [Paragraph("<b>Task (e)</b>", body_style), Paragraph("Cost Optimization", body_style), Paragraph("3 strategies: Image optimization (-87.8%), Pod right-sizing (6x density), Elastic scaling (-56.7%)", body_style), Paragraph("<font color='#047857'><b>100% Measured</b></font>", body_style)],
     ]
-    t_tasks = Table(tasks_table_data, colWidths=[52, 115, 260, 85])
+    t_tasks = Table(tasks_table_data, colWidths=[52, 115, 264, 85])
     t_tasks.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f1f5f9")),
         ('BOX', (0, 0), (-1, -1), 0.75, COLOR_BORDER),
         ('INNERGRID', (0, 0), (-1, -1), 0.5, COLOR_BORDER),
-        ('TOPPADDING', (0, 0), (-1, -1), 3),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+        ('TOPPADDING', (0, 0), (-1, -1), 2.5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 2.5),
         ('LEFTPADDING', (0, 0), (-1, -1), 5),
         ('RIGHTPADDING', (0, 0), (-1, -1), 5),
     ]))
     story.append(t_tasks)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # =========================================================================
     # 2. SYSTEM ARCHITECTURE
@@ -225,16 +232,14 @@ def build_pdf_report(pdf_filename):
 
     arch_img_path = r'E:\CLOUD_PROJECT\docs\architecture_diagram.png'
     if os.path.exists(arch_img_path):
-        story.append(Spacer(1, 3))
-        story.append(Image(arch_img_path, width=7.1 * inch, height=3.9 * inch))
         story.append(Spacer(1, 2))
-        story.append(Paragraph("<i>Figure 2.1: End-to-End System Architecture (Docker, Kubernetes Minikube, HPA, and Hybrid Cloud DR).</i>", ParagraphStyle(
-            'Cap', fontName='Helvetica-Oblique', fontSize=7.5, textColor=colors.HexColor("#64748b"), alignment=1
-        )))
-    story.append(Spacer(1, 8))
+        story.append(Image(arch_img_path, width=7.1 * inch, height=3.85 * inch))
+        story.append(Spacer(1, 2))
+        story.append(Paragraph("<i>Figure 2.1: End-to-End System Architecture (Docker, Kubernetes Minikube, HPA, and Hybrid Cloud DR).</i>", caption_style))
+    story.append(Spacer(1, 6))
 
     # =========================================================================
-    # 3. TASK (a): CONTAINERIZATION
+    # 3. TASK (a): CONTAINERIZATION (DOCKER & DOCKER COMPOSE)
     # =========================================================================
     story.append(Paragraph("3. Task (a): Containerize the Application (Flask + Redis)", h1_style))
     story.append(Paragraph(
@@ -246,7 +251,7 @@ def build_pdf_report(pdf_filename):
     story.append(Paragraph("• <b>Flask Application (app.py):</b> Exposes REST API endpoints <code>/</code>, <code>/api/count</code>, <code>/health</code>, and <code>/load</code> (for CPU benchmarking).", bullet_style))
     story.append(Paragraph("• <b>Multi-Stage Dockerfile (Dockerfile.optimized):</b> Compiles wheels in a builder stage and copies runtime binaries into <code>python:3.11-slim</code>, removing compiler overhead.", bullet_style))
     story.append(Paragraph("• <b>Docker Compose (docker-compose.yml):</b> Orchestrates Flask and Redis containers on an isolated bridge network with automated health checks.", bullet_style))
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
 
     # Screenshots for Task A
     task_a_term = r'E:\CLOUD_PROJECT\docs\screenshots\task_a_terminal_build_compose.jpg'
@@ -256,15 +261,15 @@ def build_pdf_report(pdf_filename):
     if os.path.exists(task_a_term) and os.path.exists(task_a_web):
         img_cells = [
             [
-                Image(task_a_term, width=3.45 * inch, height=1.75 * inch),
-                Image(task_a_web, width=3.45 * inch, height=1.75 * inch)
+                Image(task_a_term, width=3.48 * inch, height=1.7 * inch),
+                Image(task_a_web, width=3.48 * inch, height=1.7 * inch)
             ],
             [
-                Paragraph("<b>Screenshot 1.1:</b> Docker Compose up & image size comparison.", ParagraphStyle('c1', fontSize=7.5, textColor=colors.HexColor("#475569"))),
-                Paragraph("<b>Screenshot 1.2:</b> Web UI at http://localhost:5000 (Redis Connected).", ParagraphStyle('c2', fontSize=7.5, textColor=colors.HexColor("#475569")))
+                Paragraph("<b>Figure 3.1:</b> Docker Compose up & image size comparison.", caption_style),
+                Paragraph("<b>Figure 3.2:</b> Web UI at http://localhost:5000 (Redis Connected).", caption_style)
             ]
         ]
-        t_imgs_a = Table(img_cells, colWidths=[256, 256])
+        t_imgs_a = Table(img_cells, colWidths=[258, 258])
         t_imgs_a.setStyle(TableStyle([
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
@@ -272,7 +277,7 @@ def build_pdf_report(pdf_filename):
             ('TOPPADDING', (0, 0), (-1, -1), 2),
         ]))
         story.append(t_imgs_a)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # =========================================================================
     # 4. TASK (b): KUBERNETES DEPLOYMENT
@@ -286,29 +291,17 @@ def build_pdf_report(pdf_filename):
     story.append(Paragraph("• <b>Redis Stateful Deployment:</b> Deployed as a single replica backed by a ClusterIP service ensuring internal DNS resolution.", bullet_style))
     story.append(Paragraph("• <b>Flask Stateless Deployment:</b> Deployed with 2 baseline replicas, resource requests/limits, and HTTP liveness/readiness probes at <code>/health</code>.", bullet_style))
     story.append(Paragraph("• <b>NodePort Service:</b> Exposes the Flask application on port <code>30080</code> (port-forwarded to <code>8080</code>).", bullet_style))
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
 
-    k8s_status_data = [
-        [Paragraph("<b>Resource</b>", body_style), Paragraph("<b>Name</b>", body_style), Paragraph("<b>Status</b>", body_style), Paragraph("<b>Specification & Port Mapping</b>", body_style)],
-        [Paragraph("Pod", body_style), Paragraph("flask-deployment-d6b594594-b24bx", body_style), Paragraph("<font color='#047857'>1/1 Running</font>", body_style), Paragraph("10.244.0.14 | HTTP Port 5000 (Health OK)", body_style)],
-        [Paragraph("Pod", body_style), Paragraph("flask-deployment-d6b594594-sdm9j", body_style), Paragraph("<font color='#047857'>1/1 Running</font>", body_style), Paragraph("10.244.0.12 | HTTP Port 5000 (Health OK)", body_style)],
-        [Paragraph("Pod", body_style), Paragraph("redis-deployment-6bf4f58657-vhmc7", body_style), Paragraph("<font color='#047857'>1/1 Running</font>", body_style), Paragraph("10.244.0.13 | Redis Port 6379 (Health OK)", body_style)],
-        [Paragraph("Service", body_style), Paragraph("flask-service", body_style), Paragraph("<font color='#047857'>Active NodePort</font>", body_style), Paragraph("ClusterIP: 10.98.233.190 | NodePort: 30080 (:8080)", body_style)],
-        [Paragraph("Service", body_style), Paragraph("redis-service", body_style), Paragraph("<font color='#047857'>Active ClusterIP</font>", body_style), Paragraph("ClusterIP: 10.110.211.103 | Internal Port: 6379", body_style)],
-        [Paragraph("HPA", body_style), Paragraph("flask-hpa", body_style), Paragraph("<font color='#047857'>Active Autoscale</font>", body_style), Paragraph("Target: CPU 50% | Min: 2 Pods | Max: 6 Pods", body_style)],
-    ]
-    t_k8s = Table(k8s_status_data, colWidths=[52, 190, 80, 190])
-    t_k8s.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f1f5f9")),
-        ('BOX', (0, 0), (-1, -1), 0.75, COLOR_BORDER),
-        ('INNERGRID', (0, 0), (-1, -1), 0.5, COLOR_BORDER),
-        ('TOPPADDING', (0, 0), (-1, -1), 2.5),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 2.5),
-        ('LEFTPADDING', (0, 0), (-1, -1), 5),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 5),
-    ]))
-    story.append(t_k8s)
-    story.append(Spacer(1, 8))
+    # Screenshot for Task B
+    task_b_term = r'E:\CLOUD_PROJECT\docs\screenshots\task_b_k8s_pods_terminal.png'
+    if os.path.exists(task_b_term):
+        story.append(KeepTogether([
+            Image(task_b_term, width=7.1 * inch, height=2.0 * inch),
+            Spacer(1, 2),
+            Paragraph("<i>Figure 4.1: Terminal Proof — All Kubernetes Pods, Services, and HPA in 1/1 Running & Active State.</i>", caption_style)
+        ]))
+    story.append(Spacer(1, 6))
 
     # =========================================================================
     # 5. TASK (c): HORIZONTAL POD AUTOSCALING (HPA)
@@ -321,13 +314,17 @@ def build_pdf_report(pdf_filename):
         body_style
     ))
 
-    story.append(Paragraph("<b>Stress Test Methodology & Live Execution:</b>", h2_style))
-    story.append(Paragraph(
-        "A multi-threaded load generator (<code>scripts/load_test.py</code>) executed <b>352 concurrent synthetic CPU workload requests</b> "
-        "across 16 parallel workers hitting <code>/load?duration=0.4</code>. The recorded scaling telemetry is documented below:",
-        body_style
-    ))
+    # Screenshot for Task C
+    task_c_term = r'E:\CLOUD_PROJECT\docs\screenshots\task_c_hpa_scaling_terminal.png'
+    if os.path.exists(task_c_term):
+        story.append(KeepTogether([
+            Image(task_c_term, width=7.1 * inch, height=2.45 * inch),
+            Spacer(1, 2),
+            Paragraph("<i>Figure 5.1: Terminal Proof — HPA Autoscaling under 16-Worker Load (CPU Surging to 200%/50% & Replicas Scaling to 6).</i>", caption_style)
+        ]))
+    story.append(Spacer(1, 4))
 
+    # HPA Progression Table
     hpa_log_data = [
         [Paragraph("<b>Phase / Elapsed</b>", body_style), Paragraph("<b>Replicas</b>", body_style), Paragraph("<b>Measured CPU %</b>", body_style), Paragraph("<b>Controller Action & Observed Event</b>", body_style)],
         [Paragraph("T + 00s (Baseline)", body_style), Paragraph("2 Pods", body_style), Paragraph("2% / 50%", body_style), Paragraph("Baseline idle operation; scaling constrained by MinPods=2", body_style)],
@@ -337,41 +334,18 @@ def build_pdf_report(pdf_filename):
         [Paragraph("T + 135s (Cool-down 1)", body_style), Paragraph("3 Pods", body_style), Paragraph("2% / 50%", body_style), Paragraph("<font color='#d97706'><b>Scale Down:</b></font> Safe 50% replica step-down policy executed", body_style)],
         [Paragraph("T + 165s (Stabilized)", body_style), Paragraph("2 Pods", body_style), Paragraph("2% / 50%", body_style), Paragraph("Fully restored to baseline idle replica count (2 pods)", body_style)],
     ]
-    t_hpa = Table(hpa_log_data, colWidths=[95, 65, 80, 272])
+    t_hpa = Table(hpa_log_data, colWidths=[95, 65, 80, 276])
     t_hpa.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f1f5f9")),
         ('BOX', (0, 0), (-1, -1), 0.75, COLOR_BORDER),
         ('INNERGRID', (0, 0), (-1, -1), 0.5, COLOR_BORDER),
-        ('TOPPADDING', (0, 0), (-1, -1), 2.5),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 2.5),
+        ('TOPPADDING', (0, 0), (-1, -1), 2),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
         ('LEFTPADDING', (0, 0), (-1, -1), 5),
         ('RIGHTPADDING', (0, 0), (-1, -1), 5),
     ]))
     story.append(t_hpa)
-    story.append(Spacer(1, 4))
-
-    # Event Box
-    event_box_content = [
-        [Paragraph(
-            "<font face='Courier' size='7.5' color='#38bdf8'>"
-            "Normal  SuccessfulRescale  3m16s  horizontal-pod-autoscaler  New size: 4; reason: cpu resource utilization above target<br/>"
-            "Normal  SuccessfulRescale  3m01s  horizontal-pod-autoscaler  New size: 6; reason: cpu resource utilization above target<br/>"
-            "Normal  SuccessfulRescale  31s    horizontal-pod-autoscaler  New size: 3; reason: All metrics below target<br/>"
-            "Normal  SuccessfulRescale  1s     horizontal-pod-autoscaler  New size: 2; reason: All metrics below target"
-            "</font>", body_style
-        )]
-    ]
-    t_event = Table(event_box_content, colWidths=[512])
-    t_event.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor("#0f172a")),
-        ('BOX', (0, 0), (-1, -1), 1, colors.HexColor("#38bdf8")),
-        ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
-        ('LEFTPADDING', (0, 0), (-1, -1), 8),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
-    ]))
-    story.append(t_event)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # =========================================================================
     # 6. TASK (d): HYBRID CLOUD FAILOVER
@@ -385,26 +359,15 @@ def build_pdf_report(pdf_filename):
         body_style
     ))
 
-    fo_log_data = [
-        [Paragraph("<b>Time</b>", body_style), Paragraph("<b>Target Route</b>", body_style), Paragraph("<b>HTTP</b>", body_style), Paragraph("<b>Latency</b>", body_style), Paragraph("<b>State Description</b>", body_style)],
-        [Paragraph("17:46:50", body_style), Paragraph("Primary (K8s Cluster)", body_style), Paragraph("200 OK", body_style), Paragraph("22.7ms", body_style), Paragraph("<font color='#047857'>NORMAL (Primary Active)</font>", body_style)],
-        [Paragraph("17:46:54", body_style), Paragraph("Primary (K8s Cluster)", body_style), Paragraph("200 OK", body_style), Paragraph("10.5ms", body_style), Paragraph("<font color='#047857'>NORMAL (Primary Active)</font>", body_style)],
-        [Paragraph("17:47:06", body_style), Paragraph("Secondary (Cloud DR)", body_style), Paragraph("200 OK", body_style), Paragraph("1516ms", body_style), Paragraph("<font color='#dc2626'><b>[!] FAILOVER ENGAGED (Primary Outage)</b></font>", body_style)],
-        [Paragraph("17:47:08", body_style), Paragraph("Secondary (Cloud DR)", body_style), Paragraph("200 OK", body_style), Paragraph("1521ms", body_style), Paragraph("<font color='#dc2626'><b>[!] FAILOVER ENGAGED (Cloud Standby Active)</b></font>", body_style)],
-        [Paragraph("17:47:43", body_style), Paragraph("Primary (K8s Cluster)", body_style), Paragraph("200 OK", body_style), Paragraph("36.9ms", body_style), Paragraph("<font color='#047857'>RECOVERED (Fallback to Primary Successful)</font>", body_style)],
-    ]
-    t_fo = Table(fo_log_data, colWidths=[52, 125, 50, 55, 230])
-    t_fo.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f1f5f9")),
-        ('BOX', (0, 0), (-1, -1), 0.75, COLOR_BORDER),
-        ('INNERGRID', (0, 0), (-1, -1), 0.5, COLOR_BORDER),
-        ('TOPPADDING', (0, 0), (-1, -1), 2.5),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 2.5),
-        ('LEFTPADDING', (0, 0), (-1, -1), 5),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 5),
-    ]))
-    story.append(t_fo)
-    story.append(Spacer(1, 8))
+    # Screenshot for Task D
+    task_d_term = r'E:\CLOUD_PROJECT\docs\screenshots\task_d_failover_terminal.png'
+    if os.path.exists(task_d_term):
+        story.append(KeepTogether([
+            Image(task_d_term, width=7.1 * inch, height=2.1 * inch),
+            Spacer(1, 2),
+            Paragraph("<i>Figure 6.1: Terminal Proof — Automated Zero-Downtime Failover from Primary Cluster to Cloud Standby DR.</i>", caption_style)
+        ]))
+    story.append(Spacer(1, 6))
 
     # =========================================================================
     # 7. TASK (e): COST OPTIMIZATION (3 TECHNIQUES)
@@ -415,6 +378,16 @@ def build_pdf_report(pdf_filename):
         "each backed by measured before-and-after empirical data:",
         body_style
     ))
+
+    # Screenshot for Task E
+    task_e_term = r'E:\CLOUD_PROJECT\docs\screenshots\task_e_cost_terminal.png'
+    if os.path.exists(task_e_term):
+        story.append(KeepTogether([
+            Image(task_e_term, width=7.1 * inch, height=2.3 * inch),
+            Spacer(1, 2),
+            Paragraph("<i>Figure 7.1: Terminal Proof — Image Size Measurement (1.63GB vs 199MB) & Deployment Resource Right-Sizing.</i>", caption_style)
+        ]))
+    story.append(Spacer(1, 4))
 
     cost_table_data = [
         [
@@ -442,18 +415,18 @@ def build_pdf_report(pdf_filename):
             Paragraph("<font color='#047857'><b>56.7% Compute Cost Reduction</b></font><br/>Saves <b>2,448 pod-hours/mo</b> by dynamically matching resource provisioning to actual traffic.", body_style)
         ]
     ]
-    t_cost = Table(cost_table_data, colWidths=[130, 115, 115, 152])
+    t_cost = Table(cost_table_data, colWidths=[130, 115, 115, 156])
     t_cost.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f1f5f9")),
         ('BOX', (0, 0), (-1, -1), 0.75, COLOR_BORDER),
         ('INNERGRID', (0, 0), (-1, -1), 0.5, COLOR_BORDER),
-        ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
         ('LEFTPADDING', (0, 0), (-1, -1), 5),
         ('RIGHTPADDING', (0, 0), (-1, -1), 5),
     ]))
     story.append(t_cost)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # =========================================================================
     # 8. CONCLUSION & REPOSITORY DELIVERABLES
@@ -479,12 +452,12 @@ def build_pdf_report(pdf_filename):
             body_style
         )]
     ]
-    t_repo = Table(repo_box, colWidths=[512])
+    t_repo = Table(repo_box, colWidths=[516])
     t_repo.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, -1), COLOR_CARD),
         ('BOX', (0, 0), (-1, -1), 1, COLOR_SECONDARY),
-        ('TOPPADDING', (0, 0), (-1, -1), 6),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
         ('LEFTPADDING', (0, 0), (-1, -1), 8),
         ('RIGHTPADDING', (0, 0), (-1, -1), 8),
     ]))
