@@ -1,6 +1,9 @@
 # Project Report: Deploy a Visitor Counter Web App (Flask + Redis) on Docker and Kubernetes
 
 **Course:** Cloud Computing  
+**Student Name:** Binkatesh Kumar  
+**GitHub Profile:** https://github.com/binkateshkumarcs28  
+**Project Repository:** https://github.com/binkateshkumarcs28/visitor-counter-k8s-clou  
 **Project Title:** Deploy a Visitor Counter Web App (Flask + Redis) on Docker and Kubernetes with HPA, Hybrid Cloud Failover, and Cost Optimization  
 **Date:** November 2026  
 **Submission Mode:** CampX & Google Drive  

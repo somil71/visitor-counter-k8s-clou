@@ -204,13 +204,15 @@ def build_word_report(docx_path):
     r_sub.font.color.rgb = RGBColor(71, 85, 105)
 
     # Metadata Box Table
-    t_meta = doc.add_table(rows=3, cols=2)
-    t_meta.rows[0].cells[0].paragraphs[0].add_run("Course: Cloud Computing").bold = True
+    t_meta = doc.add_table(rows=4, cols=2)
+    t_meta.rows[0].cells[0].paragraphs[0].add_run("Student Name: Binkatesh Kumar").bold = True
     t_meta.rows[0].cells[1].paragraphs[0].add_run("Target Cluster: Minikube v1.35.0 (k8s v1.32.0)").bold = True
-    t_meta.rows[1].cells[0].paragraphs[0].add_run("Submission Deadline: 24 November 2026").bold = True
+    t_meta.rows[1].cells[0].paragraphs[0].add_run("Course: Cloud Computing").bold = True
     t_meta.rows[1].cells[1].paragraphs[0].add_run("Container Engine: Docker Desktop 27+ / Containerd").bold = True
-    t_meta.rows[2].cells[0].paragraphs[0].add_run("Platforms: CampX & Google Drive").bold = True
-    t_meta.rows[2].cells[1].paragraphs[0].add_run("GitHub: https://github.com/somil71/visitor-counter-k8s-clou").bold = True
+    t_meta.rows[2].cells[0].paragraphs[0].add_run("Submission Deadline: 24 November 2026").bold = True
+    t_meta.rows[2].cells[1].paragraphs[0].add_run("Platforms: CampX & Google Drive").bold = True
+    t_meta.rows[3].cells[0].paragraphs[0].add_run("GitHub Profile: https://github.com/binkateshkumarcs28").bold = True
+    t_meta.rows[3].cells[1].paragraphs[0].add_run("Repository: https://github.com/binkateshkumarcs28/visitor-counter-k8s-clou").bold = True
     style_table(t_meta, header_bg="F8FAFC", alt_bg="F8FAFC")
     
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
@@ -394,8 +396,13 @@ def build_word_report(docx_path):
 
     t_repo = doc.add_table(rows=1, cols=1)
     p_repo = t_repo.rows[0].cells[0].paragraphs[0]
-    p_repo.add_run("Public GitHub Repository Link:\n").bold = True
-    r_url = p_repo.add_run("https://github.com/somil71/visitor-counter-k8s-clou\n\n")
+    p_repo.add_run("Public GitHub Repository & Author Details:\n").bold = True
+    p_repo.add_run("• Student Name: ").bold = True
+    p_repo.add_run("Binkatesh Kumar\n")
+    p_repo.add_run("• GitHub Profile: ").bold = True
+    p_repo.add_run("https://github.com/binkateshkumarcs28\n")
+    p_repo.add_run("• Project Repository: ").bold = True
+    r_url = p_repo.add_run("https://github.com/binkateshkumarcs28/visitor-counter-k8s-clou\n\n")
     r_url.bold = True
     r_url.font.color.rgb = RGBColor(29, 78, 216)
     

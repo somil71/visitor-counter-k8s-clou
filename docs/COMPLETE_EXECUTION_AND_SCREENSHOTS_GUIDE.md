@@ -1,7 +1,7 @@
 # Complete Step-by-Step Recreation Guide & Screenshot Checklist
 
 **Project Title:** Deploy a Visitor Counter Web App (Flask + Redis) on Docker and Kubernetes  
-**Repository:** [https://github.com/somil71/visitor-counter-k8s-clou](https://github.com/somil71/visitor-counter-k8s-clou)  
+**Repository:** [https://github.com/binkateshkumarcs28/visitor-counter-k8s-clou](https://github.com/binkateshkumarcs28/visitor-counter-k8s-clou)  
 **Location:** `E:\CLOUD_PROJECT`  
 **Submission Deadline:** 24 November 2026 (CampX & Google Drive)
 
@@ -219,7 +219,7 @@ You must include measured before-and-after values for the three cost reduction t
 ## Final Submission Checklist (CampX & Google Drive)
 
 Before submitting by **24 November 2026**:
-1. [x] Git repository pushed to: `https://github.com/somil71/visitor-counter-k8s-clou`
+1. [x] Git repository pushed to: `https://github.com/binkateshkumarcs28/visitor-counter-k8s-clou`
 2. [ ] Open `docs/Project_Report.md`, paste your captured screenshots under each designated section.
 3. [ ] Export `Project_Report.md` to PDF or copy content into Microsoft Word and save as `Project_Report.pdf`.
 4. [ ] Upload to **Google Drive** folder requested by the professor.

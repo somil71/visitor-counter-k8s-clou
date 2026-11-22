@@ -163,16 +163,20 @@ def build_pdf_report(pdf_filename):
     # Metadata Box
     meta_data = [
         [
-            Paragraph("<b>Course:</b> Cloud Computing", body_style),
+            Paragraph("<b>Student Name:</b> Binkatesh Kumar", body_style),
             Paragraph("<b>Target Cluster:</b> Minikube v1.35.0 (k8s v1.32.0)", body_style)
         ],
         [
-            Paragraph("<b>Submission Deadline:</b> 24 November 2026", body_style),
-            Paragraph("<b>Engine / Runtime:</b> Docker Desktop 27+ / Containerd", body_style)
+            Paragraph("<b>Course:</b> Cloud Computing", body_style),
+            Paragraph("<b>Container Engine:</b> Docker Desktop 27+ / Containerd", body_style)
         ],
         [
-            Paragraph("<b>Platforms:</b> CampX & Google Drive", body_style),
-            Paragraph("<b>GitHub:</b> <font color='#1d4ed8'><u>https://github.com/somil71/visitor-counter-k8s-clou</u></font>", body_style)
+            Paragraph("<b>Submission Deadline:</b> 24 November 2026", body_style),
+            Paragraph("<b>Platforms:</b> CampX & Google Drive", body_style)
+        ],
+        [
+            Paragraph("<b>GitHub Profile:</b> https://github.com/binkateshkumarcs28", body_style),
+            Paragraph("<b>Repository:</b> <font color='#1d4ed8'><u>https://github.com/binkateshkumarcs28/visitor-counter-k8s-clou</u></font>", body_style)
         ]
     ]
     t_meta = Table(meta_data, colWidths=[258, 258])
@@ -441,14 +445,16 @@ def build_pdf_report(pdf_filename):
 
     repo_box = [
         [Paragraph(
-            "<b>Public GitHub Repository Link:</b><br/>"
-            "<font color='#1d4ed8'><u>https://github.com/somil71/visitor-counter-k8s-clou</u></font><br/><br/>"
+            "<b>Public GitHub Repository & Author Details:</b><br/>"
+            "• <b>Student Name:</b> Binkatesh Kumar<br/>"
+            "• <b>GitHub Profile:</b> https://github.com/binkateshkumarcs28<br/>"
+            "• <b>Project Repository:</b> <font color='#1d4ed8'><u>https://github.com/binkateshkumarcs28/visitor-counter-k8s-clou</u></font><br/><br/>"
             "<b>Key Artifacts in Repository:</b><br/>"
             "• <code>app/Dockerfile.optimized</code> — Multi-stage slim Docker image configuration.<br/>"
             "• <code>k8s/hpa.yaml</code> — Horizontal Pod Autoscaler manifest.<br/>"
             "• <code>failover/cloud_standby.py</code> — Simulated public cloud disaster recovery standby.<br/>"
             "• <code>docs/architecture_diagram.png</code> — High-resolution 300 DPI system architecture diagram.<br/>"
-            "• <code>docs/Project_Report.pdf</code> — Formal submission document for CampX and Google Drive.",
+            "• <code>docs/Project_Report.pdf</code> & <code>Project_Report.docx</code> — Formal submission documents for CampX and Google Drive.",
             body_style
         )]
     ]
